@@ -1,7 +1,7 @@
 import { FiTrash, FiEdit } from "react-icons/fi";
 import { useApi } from "../hooks/useApi";
 export default function Content() {
-  const { customers, handleSelect, handleDelete } = useApi();
+  const { customers, handleSelect, handleDeleteConfirm } = useApi();
   return (
     <section className="flex flex-col mt-24">
       <h1 className="text-4xl font-medium text-white">Clientes Cadastrados</h1>
@@ -31,7 +31,7 @@ export default function Content() {
             </button>
             <button
               className="hover:scale-125 duration-200"
-              onClick={() => handleDelete(customer.id)}
+              onClick={() => handleDeleteConfirm(customer.id)}
             >
               <FiTrash className="text-red-500 hover:text-red-800" size={25} />
             </button>

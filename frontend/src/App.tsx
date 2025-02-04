@@ -1,4 +1,6 @@
 "use client";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { ApiProvider } from "./contexts/ApiContext";
 
 import Content from "./pages/Content";
@@ -15,6 +17,15 @@ function App() {
           <Form />
           <Content />
         </main>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          closeOnClick
+          pauseOnHover
+          draggable
+          aria-label="Notificações do sistema"
+        />
       </div>
     </ApiProvider>
   );

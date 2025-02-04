@@ -11,6 +11,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schemaForm } from "../data/schema/schemaForm";
 import { api } from "../services/api";
+import { toast } from "react-toastify";
 
 type ApiContextType = {
   customers: Customer[];
@@ -24,6 +25,7 @@ type ApiContextType = {
   handleDelete: (id: string) => Promise<void>;
   handleSelect: (EditCustomer: Customer) => void;
   handleFormSubmit: (data: FormProps) => Promise<void>;
+  handleDeleteConfirm: (id: string) => void;
 };
 
 const ApiContexts = createContext<ApiContextType>({} as ApiContextType);
@@ -62,7 +64,6 @@ const ApiProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
       if (response.status === 200) {
-        console.log("Cliente atualizado com sucesso:", response.data);
         setCustomers((prevCustomers) =>
           prevCustomers.map((customer) =>
             customer.id === data.id
@@ -77,6 +78,7 @@ const ApiProvider = ({ children }: { children: React.ReactNode }) => {
         });
         setIsUpdating(false);
         setCustomerSelect(null);
+        toast.success("Cliente atualizado com sucesso");
       } else {
         console.error("Erro ao atualizar cliente", response);
       }
@@ -84,21 +86,51 @@ const ApiProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("Erro ao enviar a requisição:", error);
     }
   };
+  const handleDeleteConfirm = (id: string) => {
+    toast.warn(
+      <div>
+        <p>Tem certeza que deseja deletar?</p>
+        <div className="flex gap-2 mt-2">
+          <button
+            onClick={() => {
+              handleDelete(id);
+              toast.dismiss();
+            }}
+            className="bg-red-500 text-white px-2 py-1 rounded"
+          >
+            Sim
+          </button>
+          <button
+            onClick={() => toast.dismiss()}
+            className="bg-gray-500 text-white px-2 py-1 rounded"
+          >
+            Não
+          </button>
+        </div>
+      </div>,
+      {
+        position: "top-center",
+        autoClose: false,
+        closeOnClick: false,
+        draggable: false,
+        closeButton: false,
+      }
+    );
+  };
 
   const handleDelete = async (id: string) => {
     try {
       await api.delete(`/customer/${id}`);
 
-      alert(`Usuario ${id} Deletado`);
       const allCustomers = customers.filter((customer) => customer.id !== id);
       setCustomers(allCustomers);
+      toast.success("Cliente deletado com sucesso");
     } catch (e) {
       console.log(e);
     }
   };
 
   const handleSelect = (EditCustomer: Customer) => {
-    console.log("Cliente selecionado para edição:", EditCustomer);
     setIsUpdating(true);
     setCustomerSelect(EditCustomer);
   };
@@ -118,6 +150,7 @@ const ApiProvider = ({ children }: { children: React.ReactNode }) => {
         email: "",
         id: "",
       });
+      toast.success("Cliente criado com sucesso");
     } catch (error) {
       console.error("Erro ao criar cliente:", error);
     }
@@ -142,6 +175,7 @@ const ApiProvider = ({ children }: { children: React.ReactNode }) => {
         handleDelete,
         handleSelect,
         handleFormSubmit,
+        handleDeleteConfirm,
       }}
     >
       {children}
