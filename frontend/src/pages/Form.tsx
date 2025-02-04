@@ -1,4 +1,6 @@
 "use client";
+
+import { useEffect } from "react";
 import { useApi } from "../hooks/useApi";
 
 export default function Form() {
@@ -7,9 +9,21 @@ export default function Form() {
     handleSubmit,
     register,
     handleFormSubmit,
-    isUpdating,
     handleUpdate,
+    reset,
+    isUpdating,
+    customerSelect,
   } = useApi();
+
+  useEffect(() => {
+    if (customerSelect && isUpdating) {
+      reset({
+        name: customerSelect.name,
+        email: customerSelect.email,
+        id: customerSelect.id,
+      });
+    }
+  }, [customerSelect, isUpdating, reset]);
   return (
     <form
       className="flex flex-col my-6"
@@ -17,6 +31,7 @@ export default function Form() {
         isUpdating ? handleSubmit(handleUpdate) : handleSubmit(handleFormSubmit)
       }
     >
+      <input type="hidden" {...register("id")} />
       <label className="font-medium text-white">Nome:</label>
       <input
         {...register("name")}
@@ -24,6 +39,7 @@ export default function Form() {
         placeholder="Digite seu nome completo"
         className="w-full mb-5 p-2 rounded"
       />
+
       {errors.name?.message && (
         <p className="text-red-500 mb-2">{errors.name.message}</p>
       )}

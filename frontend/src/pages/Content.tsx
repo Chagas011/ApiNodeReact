@@ -1,8 +1,7 @@
 import { FiTrash, FiEdit } from "react-icons/fi";
 import { useApi } from "../hooks/useApi";
-
 export default function Content() {
-  const { customers, handleDelete, handleSelect } = useApi();
+  const { customers, handleSelect, handleDelete } = useApi();
   return (
     <section className="flex flex-col mt-24">
       <h1 className="text-4xl font-medium text-white">Clientes Cadastrados</h1>
