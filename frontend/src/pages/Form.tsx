@@ -1,19 +1,15 @@
 "use client";
 
 import { useEffect } from "react";
-import { useApi } from "../hooks/useApi";
+
+import { useCustomerForm, useCustomerStore } from "../store/customers";
 
 export default function Form() {
   const {
-    errors,
-    handleSubmit,
-    register,
-    handleFormSubmit,
-    handleUpdate,
-    reset,
-    isUpdating,
-    customerSelect,
-  } = useApi();
+    state: { customerSelect, isUpdating },
+    actions: { handleUpdate, handleFormSubmit },
+  } = useCustomerStore();
+  const { handleSubmit, register, errors, reset } = useCustomerForm();
 
   useEffect(() => {
     if (customerSelect && isUpdating) {

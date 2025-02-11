@@ -1,7 +1,16 @@
 import { FiTrash, FiEdit } from "react-icons/fi";
-import { useApi } from "../hooks/useApi";
+import { useCustomerStore } from "../store/customers";
+import { useEffect } from "react";
 export default function Content() {
-  const { customers, handleSelect, handleDeleteConfirm } = useApi();
+  const {
+    state: { customers },
+    actions: { handleSelect, handleDeleteConfirm, handleFetchCustomer },
+  } = useCustomerStore();
+
+  useEffect(() => {
+    handleFetchCustomer();
+  }, [handleFetchCustomer]);
+
   return (
     <section className="flex flex-col mt-24">
       <h1 className="text-4xl font-medium text-white">Clientes Cadastrados</h1>
